@@ -68,7 +68,7 @@ class Movie(db.Model, CommonDbOperations):
         }
 
 
-class Actor(db.Model):
+class Actor(db.Model, CommonDbOperations):
     id = Column(Integer().with_variant(Integer, "sqlite"), primary_key=True)
     name = Column(String(80), unique=True)
     bio = Column(String(), unique=True)
