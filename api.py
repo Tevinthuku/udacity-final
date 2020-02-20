@@ -3,6 +3,7 @@ from flask import Flask, jsonify, abort, request
 from flask_cors import CORS
 
 from database.models import setup_db, db_drop_and_create_all, Movie, Actor
+from auth.auth import requires_auth
 
 app = Flask(__name__)
 setup_db(app)
@@ -10,26 +11,10 @@ CORS(app)
 
 # db_drop_and_create_all()
 
-
-@app.route('/')
-def get_greeting():
-    greeting = "Hello"
-    # movie = Movie(title="New Movie",
-    #               description="Nice 1", agerestriction=12)
-
-    # movie.insert()
-    # print(movie)
-
-    return greeting
-
-
-@app.route('/coolkids')
-def be_cool():
-    return "Be cool, man, be coooool! You're almost a FSND grad!"
-
 # Actors endpoints
 @app.route("/actors")
-def get_actors():
+@requires_auth("get:actors")
+def get_actors(payload):
     all_actors = Actor.query.all()
     return jsonify({
         "success": True,
@@ -38,7 +23,8 @@ def get_actors():
 
 
 @app.route("/actors", methods=["POST"])
-def post_actor():
+@requires_auth("create:actor")
+def post_actor(payload):
     req = request.get_json()
 
     try:
@@ -55,7 +41,8 @@ def post_actor():
 
 
 @app.route('/actors/<int:actor_id>', methods=['PATCH'])
-def edit_actor(actor_id):
+@requires_auth("edit:actor")
+def edit_actor(payload, actor_id):
     actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
     if actor is None:
         abort(404)
@@ -69,7 +56,8 @@ def edit_actor(actor_id):
 
 
 @app.route('/actors/<int:actor_id>', methods=['DELETE'])
-def delete_actor(actor_id):
+@requires_auth("delete:actor")
+def delete_actor(payload, actor_id):
     actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
     if actor is None:
         abort(404)
@@ -82,7 +70,8 @@ def delete_actor(actor_id):
 
 # Movies endpoints
 @app.route("/movies")
-def get_movies():
+@requires_auth("get:movies")
+def get_movies(payload):
     all_movies = Movie.query.all()
     return jsonify({
         "success": True,
@@ -91,7 +80,8 @@ def get_movies():
 
 
 @app.route("/movies", methods=["POST"])
-def post_movie():
+@requires_auth("create:movie")
+def post_movie(payload):
     req = request.get_json()
     try:
         title = req["title"]
@@ -109,7 +99,8 @@ def post_movie():
 
 
 @app.route('/movies/<int:movie_id>', methods=['PATCH'])
-def edit_movie(movie_id):
+@requires_auth("edit:actor")
+def edit_movie(payload, movie_id):
     movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
     if movie is None:
         abort(404)
@@ -126,7 +117,8 @@ def edit_movie(movie_id):
 
 
 @app.route('/movies/<int:movie_id>', methods=['DELETE'])
-def delete_movie(movie_id):
+@requires_auth("delete:actor")
+def delete_movie(payload, movie_id):
     movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
     if movie is None:
         abort(404)
