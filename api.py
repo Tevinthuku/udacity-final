@@ -2,12 +2,14 @@ import os
 from flask import Flask, jsonify, abort, request
 from flask_cors import CORS
 
-from database.models import setup_db, db_drop_and_create_all, Movie, Actor
+
+from models import setup_db, db_drop_and_create_all, Movie, Actor
 from auth.auth import requires_auth
 
 app = Flask(__name__)
 setup_db(app)
 CORS(app)
+
 
 # db_drop_and_create_all()
 
@@ -51,7 +53,7 @@ def edit_actor(payload, actor_id):
     actor.update()
     return jsonify({
         "success": True,
-        "actor": [actor.repr()]
+        "actor": actor.repr()
     }), 200
 
 
@@ -99,7 +101,7 @@ def post_movie(payload):
 
 
 @app.route('/movies/<int:movie_id>', methods=['PATCH'])
-@requires_auth("edit:actor")
+@requires_auth("edit:movie")
 def edit_movie(payload, movie_id):
     movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
     if movie is None:
@@ -112,12 +114,12 @@ def edit_movie(payload, movie_id):
     movie.update()
     return jsonify({
         "success": True,
-        "actor": [movie.repr()]
+        "movie": movie.repr()
     }), 200
 
 
 @app.route('/movies/<int:movie_id>', methods=['DELETE'])
-@requires_auth("delete:actor")
+@requires_auth("delete:movie")
 def delete_movie(payload, movie_id):
     movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
     if movie is None:

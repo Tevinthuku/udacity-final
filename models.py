@@ -2,6 +2,8 @@ import os
 from sqlalchemy import Column, String, Integer
 from flask_sqlalchemy import SQLAlchemy
 import json
+from flask_migrate import Migrate
+
 
 database_filename = "database.db"
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -9,6 +11,7 @@ database_path = "sqlite:///{}".format(
     os.path.join(project_dir, database_filename))
 
 db = SQLAlchemy()
+
 
 '''
 setup_db(app)
@@ -21,6 +24,7 @@ def setup_db(app):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
+    Migrate(app, db)
 
 
 '''
@@ -54,7 +58,7 @@ class CommonDbOperations():
 
 class Movie(db.Model, CommonDbOperations):
     id = Column(Integer().with_variant(Integer, "sqlite"), primary_key=True)
-    title = Column(String(80), unique=True)
+    title = Column(String(80))
 
     description = Column(String(180), nullable=False)
     agerestriction = Column(Integer(), nullable=False)
@@ -70,8 +74,8 @@ class Movie(db.Model, CommonDbOperations):
 
 class Actor(db.Model, CommonDbOperations):
     id = Column(Integer().with_variant(Integer, "sqlite"), primary_key=True)
-    name = Column(String(80), unique=True)
-    bio = Column(String(), unique=True)
+    name = Column(String(80))
+    bio = Column(String())
 
     def repr(self):
         return {

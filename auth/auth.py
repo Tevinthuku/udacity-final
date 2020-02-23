@@ -35,7 +35,7 @@ class AuthError(Exception):
 
 
 def get_token_auth_header():
-    auth_header = request.headers["Authorization"]
+    auth_header = request.headers.get("Authorization", None)
     if not auth_header:
         raise AuthError({
             "code": "Not Implemented",
