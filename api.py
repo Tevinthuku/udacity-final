@@ -165,3 +165,10 @@ def internal_server_error(error):
         "error": 500,
         "message": "Internal Server Error"
     }), 500
+
+
+if __name__ == '__main__':
+    """
+        the app runs here
+    """
+    app.run()
