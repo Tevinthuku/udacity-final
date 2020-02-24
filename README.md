@@ -5,8 +5,16 @@ A flask app that enables Producers & directors to create movies and actors and a
 ### How to run this
 
 1. Install dependencies `pip install -r requirements.txt`
-2. Run `python api.py`
-3. Run tests via `python test_api.py`
+2. Use the .env.sample as a template for setting up your .env file, I will have provided this in the submission notes though for an easier setup
+3. Run `source .env`
+4. Run `python api.py`
+5. Run tests via `python test_api.py`
+
+### How to login
+
+Use the link below to login to the application
+
+https://dev--rpzxv4r.auth0.com/authorize?audience=http://localhost:8080/&response_type=token&client_id=D2q1JWF7fyutvm5MuE6EYR6mbHnPy5jQ&redirect_uri=http://localhost:5000/login-results
 
 ### Production Link
 
